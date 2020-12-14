@@ -1,6 +1,8 @@
 import React, { Fragment, useEffect } from 'react';
 import { AlertCircle as AlertCircleIcon } from 'react-feather';
-import { Link } from 'react-router-dom';
+import { useUserContext } from '@magento/peregrine/lib/context/user';
+
+import { Link, Redirect } from 'react-router-dom';
 
 import { useWindowSize, useToasts } from '@magento/peregrine';
 import {
@@ -30,7 +32,10 @@ const errorIcon = <Icon src={AlertCircleIcon} size={20} />;
 
 const CheckoutPage = props => {
     const { classes: propClasses } = props;
-    
+    const [{isSignedIn}] = useUserContext();
+    if (!isSignedIn) {
+       return <Redirect to='/'/>
+    }
     const talonProps = useCheckoutPage({
         ...CheckoutPageOperations
     });
@@ -69,6 +74,9 @@ const CheckoutPage = props => {
     } = talonProps;
     
     const [, { addToast }] = useToasts();
+    const item = cartItems.map(item=> item.__typename);
+
+   
 
     useEffect(() => {
         if (hasError) {
@@ -119,7 +127,7 @@ const CheckoutPage = props => {
             </div>
         );
     } else {
-        const loginButton = isGuestCheckout ? (
+        const loginButton = isGuestCheckout && !isSignedIn ? (
             <div className={classes.signin_container}>
                 <LinkButton className={classes.sign_in} onClick={handleSignIn}>
                     {'Login and Checkout Faster'}
@@ -128,7 +136,7 @@ const CheckoutPage = props => {
         ) : null;
 
         const shippingMethodSection =
-            checkoutStep >= CHECKOUT_STEP.SHIPPING_METHOD ? (
+            checkoutStep >= CHECKOUT_STEP.SHIPPING_METHOD  ? (
                 <ShippingMethod
                     pageIsUpdating={isUpdating}
                     onSave={setShippingMethodDone}
@@ -246,7 +254,7 @@ const CheckoutPage = props => {
                     />
                 </div>
                 <div className={classes.shipping_method_container}>
-                    {shippingMethodSection}
+                   {shippingMethodSection}
                 </div>
                 <div className={classes.payment_information_container}>
                     {paymentInformationSection}

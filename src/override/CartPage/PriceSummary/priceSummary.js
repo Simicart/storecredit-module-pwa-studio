@@ -12,6 +12,7 @@ import TaxSummary from '@magento/venia-ui/lib/components/CartPage/PriceSummary/t
 import { PriceSummaryFragment } from '@magento/venia-ui/lib/components/CartPage/PriceSummary/priceSummaryFragments';
 import  Checkbox  from '@magento/venia-ui/lib/components/Checkbox/checkbox.js';
 import { GET_CUSTOMER_STORE_CREDIT_INFO, SPEND_STORE_CREDIT } from './customerStoreCredit.gql';
+import { Redirect } from 'react-router-dom';
 
 
 export const GET_PRICE_SUMMARY = gql`
@@ -66,8 +67,7 @@ const PriceSummary = props => {
         usedStoreCredit  ,
         spendStoreCreditData      
     } = talonProps;
-    
-    if (hasError || spendStoreCreditError) {
+    if (hasError) {
         return (
             <div className={classes.root}>
                 <span className={classes.errorText}>
@@ -78,7 +78,9 @@ const PriceSummary = props => {
     } else if (!hasItems) {
         return null;
     }
-
+if (spendStoreCreditError) {
+    return <Redirect to='/checkout'/>
+}
     const { subtotal, total, discounts, giftCards, taxes, shipping } = flatData;
 
     const isPriceUpdating = isUpdating || isLoading;
@@ -108,8 +110,9 @@ const PriceSummary = props => {
         userStoreCreditInfo.customer.mp_store_credit && userStoreCreditInfo.customer.mp_store_credit.mp_credit_balance
     ) { 
         const { mp_credit_balance } = userStoreCreditInfo.customer.mp_store_credit
-        const price = isOpen === true && spendStoreCreditData !== null && mp_credit_balance.replace('$','') >= 1?
+        const price = isOpen === true && !spendStoreCreditError && mp_credit_balance.replace('$','') >= 1?
                     (
+                        
                         <span className={totalPriceClass}>
                             <Price value={spendStoreCreditData.MpStoreCreditCustomerSpending[3].value} currencyCode={total.currency}/>
                         </span>

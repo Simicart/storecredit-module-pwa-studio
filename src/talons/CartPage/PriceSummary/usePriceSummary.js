@@ -95,7 +95,7 @@ export const usePriceSummary = props => {
             //console.log(err)
         }
     }
-console.log(fetchCartTotalsData);
+
     const spendStoreCredit = (spend) => {
         spendStoreCreditMutation({
             variables: {
