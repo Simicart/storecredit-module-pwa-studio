@@ -65,10 +65,12 @@ const PriceSummary = props => {
         spendStoreCreditLoading,
         spendStoreCreditError,
         usedStoreCredit,
-        spendStoreCreditData
+        spendStoreCreditData,
+        spendValue
     } = talonProps;
-    
-    
+    console.log(talonProps)
+
+
     if (hasError) {
         return (
             <div className={classes.root}>
@@ -111,27 +113,18 @@ const PriceSummary = props => {
         userStoreCreditInfo.customer.mp_store_credit && userStoreCreditInfo.customer.mp_store_credit.mp_credit_balance
     ) {
         const { mp_credit_balance } = userStoreCreditInfo.customer.mp_store_credit
-        const price = isOpen === true && !spendStoreCreditError && mp_credit_balance.replace('$', '') >= 1 ?
-            (
-
-                <span className={totalPriceClass}>
-                    <Price value={spendStoreCreditData.MpStoreCreditCustomerSpending[3].value} currencyCode={total.currency} />
-                </span>
-            )
-            :
-            (
-                <span className={totalPriceClass}>
-                    <Price value={total.value} currencyCode={total.currency} />
-                </span>
-            )
+        const price = (
+            <span className={totalPriceClass}>
+                <Price value={total.value} currencyCode={total.currency} />
+            </span>
+        )
         return (
             <div className={classes.root}>
                 <div className={classes.lineItems}>
                     <Checkbox
-                        label={'Use store credit'}
+                        label={`Use store credit`}
                         id="credit_options"
                         field="credit_options"
-                        label="Use Store Credit"
                         fieldState={{
                             value: usedStoreCredit
                         }}
@@ -154,6 +147,15 @@ const PriceSummary = props => {
                             currencyCode={subtotal.currency}
                         />
                     </span>
+                    {spendValue ? <>
+                        <span className={classes.lineItemLabel}>{'StoreCredit Discount'}</span>
+                        <span className={priceClass}>
+                            <Price
+                                value={0 - spendValue}
+                                currencyCode={subtotal.currency}
+                            />
+                        </span>
+                    </> : ''}
                     <DiscountSummary
                         classes={{
                             lineItemLabel: classes.lineItemLabel,

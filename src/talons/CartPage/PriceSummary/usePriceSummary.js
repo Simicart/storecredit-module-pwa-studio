@@ -85,21 +85,22 @@ export const usePriceSummary = props => {
     }, [history]);
     const flatData = flattenData(fetchCartTotalsData)
     let usedStoreCredit = false
-    console.log(fetchCartTotalsData)
+    let spendValue = 0
+    
     if (fetchCartTotalsData) {
         try {
-            usedStoreCredit = parseInt(fetchCartTotalsData.cart.prices.mp_store_credit_discount[0].value) ? true : false
+            spendValue = parseInt(fetchCartTotalsData.cart.prices.mp_store_credit_discount[0].value)
         } catch (err) {
             console.log(err)
         }
     } else {
         try {
-            usedStoreCredit = parseInt(cartData.details.prices.mp_store_credit_discount[0].value) ? true : false
+            spendValue = parseInt(cartData.details.prices.mp_store_credit_discount[0].value)
         } catch (err) {
             console.log(err)
         }
     }
-    console.log(usedStoreCredit)
+    usedStoreCredit = spendValue ? true : false
 
     let toSpend = 0;
     if (
@@ -135,9 +136,8 @@ export const usePriceSummary = props => {
         spendStoreCreditError,
         spendStoreCreditLoading,
         usedStoreCredit,
-        spendStoreCreditData
-
-
+        spendStoreCreditData,
+        spendValue
     };
 };
 
