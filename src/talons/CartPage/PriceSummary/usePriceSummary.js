@@ -100,7 +100,7 @@ export const usePriceSummary = props => {
         spendStoreCreditMutation({
             variables: {
                 cart_id: cartId,
-                amount: spend ? 1 : 0
+                amount: spend ? 999999 : 0
             }
         })
     }

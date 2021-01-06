@@ -1,5 +1,5 @@
 {
-  "name": "@simicart/addstorecredit",
+  "name": "@simicart/storecredit",
   "author": "Nguyen Dinh Duc <nguyendinhduc29041999@gmail.com>",
   "version": "0.0.0",
   "main": "src/index.js",

@@ -8,7 +8,7 @@ import { useWindowSize, useToasts } from '@magento/peregrine';
 import {
     CHECKOUT_STEP,
     useCheckoutPage
-} from '@magento/peregrine/lib/talons/CheckoutPage/useCheckoutPage';
+} from '../../talons/CheckoutPage/useCheckoutPage';
 
 import { mergeClasses } from '@magento/venia-ui/lib/classify';
 import Button from '@magento/venia-ui/lib/components/Button';
@@ -26,29 +26,30 @@ import ShippingInformation from '@magento/venia-ui/lib/components/CheckoutPage/S
 import OrderConfirmationPage from '@magento/venia-ui/lib/components/CheckoutPage/OrderConfirmationPage';
 import ItemsReview from '@magento/venia-ui/lib/components/CheckoutPage/ItemsReview';
 import defaultClasses from '@magento/venia-ui/lib/components/CheckoutPage/checkoutPage.css';
-import CheckoutPageOperations from '@magento/venia-ui/lib/components/CheckoutPage/checkoutPage.gql.js';
+import CheckoutPageOperations from './checkoutPage.gql.js';
 
 const errorIcon = <Icon src={AlertCircleIcon} size={20} />;
 
 const CheckoutPage = props => {
     const { classes: propClasses } = props;
-    const [{isSignedIn}] = useUserContext();
+    const [{ isSignedIn }] = useUserContext();
     if (!isSignedIn) {
-       return <Redirect to='/'/>
+        alert('Please Login first to continue!');
+        return <Redirect to='/' />
     }
     const talonProps = useCheckoutPage({
         ...CheckoutPageOperations
     });
-    
+    console.log(talonProps)
     const {
         /**
          * Enum, one of:
          * SHIPPING_ADDRESS, SHIPPING_METHOD, PAYMENT, REVIEW
          */
-       
+
         activeContent,
         cartItems,
-        checkoutStep,
+        //checkoutStep,
         customer,
         error,
         handleSignIn,
@@ -70,13 +71,17 @@ const CheckoutPage = props => {
         resetReviewOrderButtonClicked,
         handleReviewOrder,
         reviewOrderButtonClicked,
-        toggleActiveContent
+        toggleActiveContent,
+        is_virtual
     } = talonProps;
-    
+    let checkoutStep = talonProps.checkoutStep
+    console.log(talonProps)
+    if (is_virtual)
+        checkoutStep = CHECKOUT_STEP.PAYMENT
     const [, { addToast }] = useToasts();
-    const item = cartItems.map(item=> item.__typename);
+    const item = cartItems.map(item => item.__typename);
 
-   
+
 
     useEffect(() => {
         if (hasError) {
@@ -136,17 +141,17 @@ const CheckoutPage = props => {
         ) : null;
 
         const shippingMethodSection =
-            checkoutStep >= CHECKOUT_STEP.SHIPPING_METHOD  ? (
+            checkoutStep >= CHECKOUT_STEP.SHIPPING_METHOD ? (
                 <ShippingMethod
                     pageIsUpdating={isUpdating}
                     onSave={setShippingMethodDone}
                     setPageIsUpdating={setIsUpdating}
                 />
             ) : (
-                <h3 className={classes.shipping_method_heading}>
-                    {'2. Shipping Method'}
-                </h3>
-            );
+                    <h3 className={classes.shipping_method_heading}>
+                        {'2. Shipping Method'}
+                    </h3>
+                );
 
         const paymentInformationSection =
             checkoutStep >= CHECKOUT_STEP.PAYMENT ? (
@@ -158,10 +163,10 @@ const CheckoutPage = props => {
                     shouldSubmit={reviewOrderButtonClicked}
                 />
             ) : (
-                <h3 className={classes.payment_information_heading}>
-                    {'3. Payment Information'}
-                </h3>
-            );
+                    <h3 className={classes.payment_information_heading}>
+                        {'3. Payment Information'}
+                    </h3>
+                );
 
         const priceAdjustmentsSection =
             checkoutStep === CHECKOUT_STEP.PAYMENT ? (
@@ -217,8 +222,8 @@ const CheckoutPage = props => {
         const guestCheckoutHeaderText = isGuestCheckout
             ? 'Guest Checkout'
             : customer.default_shipping
-            ? 'Review and Place Order'
-            : `Welcome ${customer.firstname}!`;
+                ? 'Review and Place Order'
+                : `Welcome ${customer.firstname}!`;
 
         const checkoutContentClass =
             activeContent === 'checkout'
@@ -247,15 +252,19 @@ const CheckoutPage = props => {
                         {guestCheckoutHeaderText}
                     </h1>
                 </div>
-                <div className={classes.shipping_information_container}>
-                    <ShippingInformation
-                        onSave={setShippingInformationDone}
-                        toggleActiveContent={toggleActiveContent}
-                    />
-                </div>
-                <div className={classes.shipping_method_container}>
-                   {shippingMethodSection}
-                </div>
+                {!is_virtual ?
+                    <div className={classes.shipping_information_container}>
+                        <ShippingInformation
+                            onSave={setShippingInformationDone}
+                            toggleActiveContent={toggleActiveContent}
+                        />
+                    </div> : ''}
+
+                {!is_virtual ?
+                    <div className={classes.shipping_method_container}>
+                        {shippingMethodSection}
+                    </div> : ''
+                }
                 <div className={classes.payment_information_container}>
                     {paymentInformationSection}
                 </div>

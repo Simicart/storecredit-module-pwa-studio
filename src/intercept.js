@@ -13,7 +13,7 @@ module.exports = targets => {
       routesArray.push({
         name: 'Store Credit',
         pattern: '/storecredit',
-        path:'@simicart/addstorecredit/src/components/StoreCreditPage/storeCreditPage.js'
+        path:'@simicart/storecredit/src/components/StoreCreditPage/storeCreditPage.js'
       });
       return routesArray;
     });

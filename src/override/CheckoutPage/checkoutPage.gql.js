@@ -45,6 +45,7 @@ export const GET_CHECKOUT_DETAILS = gql`
     query getCheckoutDetails($cartId: String!) {
         cart(cart_id: $cartId) {
             id
+            is_virtual
             ...CheckoutPageFragment
         }
     }

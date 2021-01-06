@@ -44,6 +44,7 @@ export const useStoreCreditPage = (props) => {
                 pageSize:20,
                 currentPage:1
             },
+            fetchPolicy: 'cache-and-network',
             skip:!isSignedIn
         }
     );

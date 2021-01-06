@@ -5,21 +5,21 @@ import {
     useMutation,
     useQuery
 } from '@apollo/client';
-
 import { clearCartDataFromCache } from '@magento/peregrine/lib/Apollo/clearCartDataFromCache';
 import { useAppContext } from '@magento/peregrine/lib/context/app';
 import { useUserContext } from '@magento/peregrine/lib/context/user';
 import { useCartContext } from '@magento/peregrine/lib/context/cart';
-
 import CheckoutError from '@magento/peregrine/lib/talons/CheckoutPage/CheckoutError.js';
+
+
 export const CHECKOUT_STEP = {
     SHIPPING_ADDRESS: 1,
     SHIPPING_METHOD: 2,
     PAYMENT: 3,
     REVIEW: 4
 };
+
 export const useCheckoutPage = props => {
-    
     const {
         mutations: { createCartMutation, placeOrderMutation },
         queries: {
@@ -28,12 +28,11 @@ export const useCheckoutPage = props => {
             getOrderDetailsQuery
         }
     } = props;
-    
+
     const [reviewOrderButtonClicked, setReviewOrderButtonClicked] = useState(
         false
     );
-    
-    
+
     const apolloClient = useApolloClient();
     const [isUpdating, setIsUpdating] = useState(false);
     const [activeContent, setActiveContent] = useState('checkout');
@@ -160,7 +159,6 @@ export const useCheckoutPage = props => {
         getOrderDetails({
             variables: {
                 cartId
-                
             }
         });
     }, [cartId, getOrderDetails]);
@@ -173,14 +171,14 @@ export const useCheckoutPage = props => {
                         cartId
                     }
                 });
-                
+
                 // Cleanup stale cart and customer info.
                 await removeCart();
                 await clearCartDataFromCache(apolloClient);
+
                 await createCart({
                     fetchCartId
                 });
-                
             } catch (err) {
                 console.error(
                     'An error occurred during when placing the order',
@@ -202,14 +200,10 @@ export const useCheckoutPage = props => {
         orderDetailsData,
         placeOrder,
         placeOrderCalled,
-        removeCart,
-        creditSpending,
-        creditSpendingData,
-
+        removeCart
     ]);
 
     return {
-        
         activeContent,
         cartItems,
         checkoutStep,
@@ -219,11 +213,11 @@ export const useCheckoutPage = props => {
         handlePlaceOrder,
         hasError: !!checkoutError,
         isCartEmpty: !(checkoutData && checkoutData.cart.total_quantity),
+        is_virtual: (checkoutData && checkoutData.cart && !checkoutData.cart.is_virtual) ? false: true,
         isGuestCheckout: !isSignedIn,
         isLoading,
         isUpdating,
         orderDetailsData,
-        creditSpendingData,
         orderDetailsLoading,
         orderNumber:
             (placeOrderData && placeOrderData.placeOrder.order.order_number) ||

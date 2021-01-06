@@ -3,7 +3,7 @@ import { mergeClasses } from '@magento/venia-ui/lib/classify';
 import defaultClasses from './style.css';
 import { useUserContext } from '@magento/peregrine/lib/context/user';
 import { Redirect } from '@magento/venia-drivers';
-import { useStoreCreditPage } from '@simicart/addstorecredit/src/talons/StoreCreditPage/useStoreCreditPage.js'
+import { useStoreCreditPage } from '@simicart/storecredit/src/talons/StoreCreditPage/useStoreCreditPage.js'
 import { Button, makeStyles, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@material-ui/core';
 
 
@@ -49,9 +49,7 @@ const StoreCreditPage = (props) => {
     if(customerSCInfoError){
         return ''
     }
-    console.log(customerSCInfoData.customer);
     const transactions = customerSCInfoData.customer.mp_store_credit.transactions.items;
-    console.log(transactions);
     let order =1
     
     return (

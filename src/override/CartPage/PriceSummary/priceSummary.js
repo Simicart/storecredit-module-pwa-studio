@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { gql } from '@apollo/client';
 import { Price } from '@magento/peregrine';
 import { usePriceSummary } from '@magento/peregrine/lib/talons/CartPage/PriceSummary/usePriceSummary';
@@ -10,7 +10,7 @@ import GiftCardSummary from '@magento/venia-ui/lib/components/CartPage/PriceSumm
 import ShippingSummary from '@magento/venia-ui/lib/components/CartPage/PriceSummary/shippingSummary';
 import TaxSummary from '@magento/venia-ui/lib/components/CartPage/PriceSummary/taxSummary';
 import { PriceSummaryFragment } from '@magento/venia-ui/lib/components/CartPage/PriceSummary/priceSummaryFragments';
-import  Checkbox  from '@magento/venia-ui/lib/components/Checkbox/checkbox.js';
+import Checkbox from '@magento/venia-ui/lib/components/Checkbox/checkbox.js';
 import { GET_CUSTOMER_STORE_CREDIT_INFO, SPEND_STORE_CREDIT } from './customerStoreCredit.gql';
 import { Redirect } from 'react-router-dom';
 
@@ -48,7 +48,7 @@ const PriceSummary = props => {
             getStoreCreditInfoQr: GET_CUSTOMER_STORE_CREDIT_INFO,
             getPriceSummary: GET_PRICE_SUMMARY
         },
-        mutation:{
+        mutation: {
             MpStoreCreditCustomerSpending: SPEND_STORE_CREDIT
         }
     });
@@ -64,9 +64,10 @@ const PriceSummary = props => {
         spendStoreCredit,
         spendStoreCreditLoading,
         spendStoreCreditError,
-        usedStoreCredit  ,
-        spendStoreCreditData      
+        usedStoreCredit,
+        spendStoreCreditData
     } = talonProps;
+    const [toUseStoreCredit, setToUseStoreCredit] = useState(usedStoreCredit);
     if (hasError) {
         return (
             <div className={classes.root}>
@@ -78,9 +79,9 @@ const PriceSummary = props => {
     } else if (!hasItems) {
         return null;
     }
-if (spendStoreCreditError) {
-    return <Redirect to='/checkout'/>
-}
+    if (spendStoreCreditError) {
+        return <Redirect to='/checkout' />
+    }
     const { subtotal, total, discounts, giftCards, taxes, shipping } = flatData;
 
     const isPriceUpdating = isUpdating || isLoading;
@@ -99,8 +100,7 @@ if (spendStoreCreditError) {
             </Button>
         </div>
     ) : null;
-    
-    const [toUseStoreCredit, setToUseStoreCredit] = useState(usedStoreCredit);
+
     if (spendStoreCreditLoading || !userStoreCreditInfo) {
         return 'Loading...'
     }
@@ -108,94 +108,95 @@ if (spendStoreCreditError) {
     if (
         userStoreCreditInfo && userStoreCreditInfo.customer &&
         userStoreCreditInfo.customer.mp_store_credit && userStoreCreditInfo.customer.mp_store_credit.mp_credit_balance
-    ) { 
+    ) {
         const { mp_credit_balance } = userStoreCreditInfo.customer.mp_store_credit
-        const price = isOpen === true && !spendStoreCreditError && mp_credit_balance.replace('$','') >= 1?
-                    (
-                        
-                        <span className={totalPriceClass}>
-                            <Price value={spendStoreCreditData.MpStoreCreditCustomerSpending[3].value} currencyCode={total.currency}/>
-                        </span>
-                    )
-                    :
-                    (
-                        <span className={totalPriceClass}>
-                            <Price value={total.value} currencyCode={total.currency}/>
-                        </span>
-                    )
-    return (
-        <div className={classes.root}>
-            <div className={classes.lineItems}>
-                <Checkbox
-                    label={'Use store credit'}
-                    id="credit_options"
-                    field="credit_options"
-                    label="Use Store Credit"
-                    fieldState={{
-                        value: isOpen
-                    }}
-                    onClick={() => {
-                        setOpen(!isOpen)
-                        spendStoreCredit(!toUseStoreCredit)
-                        setToUseStoreCredit(!toUseStoreCredit)
-                    
-                    }}
-                    onKeyUp={() => {
-                        setOpen(!isOpen) 
-                        spendStoreCredit(!toUseStoreCredit)
-                        setToUseStoreCredit(!toUseStoreCredit)
-                    
-                    }}
-                />
-                <br/>
-        
-                <span className={classes.lineItemLabel}>{'Subtotal'}</span>
-                <span className={priceClass}>
-                    <Price
-                        value={subtotal.value}
-                        currencyCode={subtotal.currency}
+        const price = isOpen === true && !spendStoreCreditError && mp_credit_balance.replace('$', '') >= 1 ?
+            (
+
+                <span className={totalPriceClass}>
+                    <Price value={spendStoreCreditData.MpStoreCreditCustomerSpending[3].value} currencyCode={total.currency} />
+                </span>
+            )
+            :
+            (
+                <span className={totalPriceClass}>
+                    <Price value={total.value} currencyCode={total.currency} />
+                </span>
+            )
+        return (
+            <div className={classes.root}>
+                <div className={classes.lineItems}>
+                    <Checkbox
+                        label={'Use store credit'}
+                        id="credit_options"
+                        field="credit_options"
+                        label="Use Store Credit"
+                        fieldState={{
+                            value: isOpen
+                        }}
+                        onClick={() => {
+                            setOpen(!isOpen)
+                            spendStoreCredit(!toUseStoreCredit)
+                            setToUseStoreCredit(!toUseStoreCredit)
+
+                        }}
+                        onKeyUp={() => {
+                            setOpen(!isOpen)
+                            spendStoreCredit(!toUseStoreCredit)
+                            setToUseStoreCredit(!toUseStoreCredit)
+
+                        }}
                     />
-                </span>
-                <DiscountSummary
-                    classes={{
-                        lineItemLabel: classes.lineItemLabel,
-                        price: priceClass
-                    }}
-                    data={discounts}
-                />
-                <GiftCardSummary
-                    classes={{
-                        lineItemLabel: classes.lineItemLabel,
-                        price: priceClass
-                    }}
-                    data={giftCards}
-                />
-                <TaxSummary
-                    classes={{
-                        lineItemLabel: classes.lineItemLabel,
-                        price: priceClass
-                    }}
-                    data={taxes}
-                    isCheckout={isCheckout}
-                />
-                <ShippingSummary
-                    classes={{
-                        lineItemLabel: classes.lineItemLabel,
-                        price: priceClass
-                    }}
-                    data={shipping}
-                    isCheckout={isCheckout}
-                />
-                <span className={classes.totalLabel}>
-                    {isCheckout ? 'Total' : 'Estimated Total'}
-                </span>
-                {price}
-                
+                    <br />
+
+                    <span className={classes.lineItemLabel}>{'Subtotal'}</span>
+                    <span className={priceClass}>
+                        <Price
+                            value={subtotal.value}
+                            currencyCode={subtotal.currency}
+                        />
+                    </span>
+                    <DiscountSummary
+                        classes={{
+                            lineItemLabel: classes.lineItemLabel,
+                            price: priceClass
+                        }}
+                        data={discounts}
+                    />
+                    <GiftCardSummary
+                        classes={{
+                            lineItemLabel: classes.lineItemLabel,
+                            price: priceClass
+                        }}
+                        data={giftCards}
+                    />
+                    <TaxSummary
+                        classes={{
+                            lineItemLabel: classes.lineItemLabel,
+                            price: priceClass
+                        }}
+                        data={taxes}
+                        isCheckout={isCheckout}
+                    />
+                    <ShippingSummary
+                        classes={{
+                            lineItemLabel: classes.lineItemLabel,
+                            price: priceClass
+                        }}
+                        data={shipping}
+                        isCheckout={isCheckout}
+                    />
+                    <span className={classes.totalLabel}>
+                        {isCheckout ? 'Total' : 'Estimated Total'}
+                    </span>
+                    {price}
+
+                </div>
+                {proceedToCheckoutButton}
             </div>
-            {proceedToCheckoutButton}
-        </div>
-    );  }
-    return ''  
+        );
+    }
+    return ''
 };
 
 export default PriceSummary;

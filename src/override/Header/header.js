@@ -16,7 +16,7 @@ import defaultClasses from '@magento/venia-ui/lib/components/Header/header.css';
 import PageLoadingIndicator from '@magento/venia-ui/lib/components/PageLoadingIndicator';
 import Balance from './balance';
 import { useUserContext } from '@magento/peregrine/lib/context/user';
-import { useGetBalance } from '@simicart/addstorecredit/src/talons/GetBalance/useGetBalance.js'
+import { useGetBalance } from '@simicart/storecredit/src/talons/GetBalance/useGetBalance.js'
 const SearchBar = React.lazy(() => import('@magento/venia-ui/lib/components/SearchBar'));
 
 
