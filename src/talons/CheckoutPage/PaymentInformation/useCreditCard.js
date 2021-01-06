@@ -162,7 +162,7 @@ export const useCreditCard = props => {
     ] = useMutation(setCreditCardDetailsOnCartMutation);
 
     const shippingAddressCountry = 'US'
-    const isBillingAddressSame = formState.values.isBillingAddressSame;
+    const isBillingAddressSame = false;//formState.values.isBillingAddressSame;
 
     const initialValues = useMemo(() => {
         const isBillingAddressSame = isBillingAddressSameData
@@ -204,7 +204,7 @@ export const useCreditCard = props => {
                 cart: {
                     __typename: 'Cart',
                     id: cartId,
-                    isBillingAddressSame
+                    isBillingAddressSame: false
                 }
             }
         });

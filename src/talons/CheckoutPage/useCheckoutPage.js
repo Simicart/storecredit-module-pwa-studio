@@ -147,7 +147,7 @@ export const useCheckoutPage = props => {
     }, [checkoutStep, setCheckoutStep]);
 
     const setPaymentInformationDone = useCallback(() => {
-        if (checkoutStep === CHECKOUT_STEP.PAYMENT) {
+        if ((checkoutStep === CHECKOUT_STEP.PAYMENT) || is_virtual) {
             window.scrollTo({
                 left: 0,
                 top: 0,
@@ -194,8 +194,8 @@ export const useCheckoutPage = props => {
                 setCheckoutStep(CHECKOUT_STEP.PAYMENT);
             }
         }
-
         if (orderDetailsData && !placeOrderCalled) {
+            console.log('in!!')
             placeOrderAndCleanup();
         }
     }, [

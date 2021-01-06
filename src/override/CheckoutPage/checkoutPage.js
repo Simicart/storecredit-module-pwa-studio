@@ -76,7 +76,7 @@ const CheckoutPage = props => {
     } = talonProps;
     let checkoutStep = talonProps.checkoutStep
     console.log(talonProps)
-    if (is_virtual)
+    if (is_virtual && (checkoutStep < CHECKOUT_STEP.PAYMENT))
         checkoutStep = CHECKOUT_STEP.PAYMENT
     const [, { addToast }] = useToasts();
     const item = cartItems.map(item => item.__typename);
@@ -174,7 +174,7 @@ const CheckoutPage = props => {
                     <PriceAdjustments setPageIsUpdating={setIsUpdating} />
                 </div>
             ) : null;
-
+console.log(checkoutStep)
         const reviewOrderButton =
             checkoutStep === CHECKOUT_STEP.PAYMENT ? (
                 <Button
