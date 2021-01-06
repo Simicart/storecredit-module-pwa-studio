@@ -17,4 +17,5 @@ module.exports = componentOverride = {
     [`@magento/venia-ui/lib/components/CheckoutPage/PaymentInformation/index.js`]:'@simicart/storecredit/src/override/CheckoutPage/PaymentInformation/index.js',
     [`@magento/venia-ui/lib/components/CheckoutPage/PaymentInformation/creditCard.js`]:'@simicart/storecredit/src/override/CheckoutPage/PaymentInformation/creditCard.js',
     [`@magento/peregrine/lib/talons/CheckoutPage/PaymentInformation/useCreditCard.js`]:'@simicart/storecredit/src/talons/CheckoutPage/PaymentInformation/useCreditCard.js',
+    [`@magento/peregrine/lib/talons/CheckoutPage/OrderConfirmationPage/useOrderConfirmationPage`]:'@simicart/storecredit/src/talons/CheckoutPage/OrderConfirmationPage/useOrderConfirmationPage.js',
 };

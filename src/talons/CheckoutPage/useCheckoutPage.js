@@ -195,7 +195,6 @@ export const useCheckoutPage = props => {
             }
         }
         if (orderDetailsData && !placeOrderCalled) {
-            console.log('in!!')
             placeOrderAndCleanup();
         }
     }, [

@@ -68,7 +68,6 @@ const PriceSummary = props => {
         spendStoreCreditData,
         spendValue
     } = talonProps;
-    console.log(talonProps)
 
 
     if (hasError) {
