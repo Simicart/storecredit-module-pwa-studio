@@ -22,7 +22,7 @@ const flattenData = data => {
         taxes: data.cart.prices.applied_taxes,
         shipping: data.cart.shipping_addresses,
         credit: data.cart.mp_store_credit_discount
-        
+
     };
 };
 
@@ -46,14 +46,14 @@ const flattenData = data => {
  */
 export const usePriceSummary = props => {
     const {
-        queries: { getStoreCreditInfoQr,getPriceSummary,},
-        mutation:{ MpStoreCreditCustomerSpending }
+        queries: { getStoreCreditInfoQr, getPriceSummary, },
+        mutation: { MpStoreCreditCustomerSpending }
     } = props;
     const [{ isSignedIn }] = useUserContext();
     const [cartData] = useCartContext();
     const [{ cartId }] = useCartContext();
     const history = useHistory();
-    
+
     // We don't want to display "Estimated" or the "Proceed" button in checkout.
     const match = useRouteMatch('/checkout');
     const isCheckout = !!match;
@@ -67,11 +67,14 @@ export const usePriceSummary = props => {
     const [
         spendStoreCreditMutation,
         { error: spendStoreCreditError, loading: spendStoreCreditLoading, data: spendStoreCreditData }
-    ] = useMutation(MpStoreCreditCustomerSpending)
-    
-    const { error, loading, data:fetchCartTotalsData } = useQuery(getPriceSummary, {
-        fetchPolicy: 'cache-and-network',
-        nextFetchPolicy: 'cache-first',
+    ] = useMutation(MpStoreCreditCustomerSpending, {
+        onCompleted() {
+            window.location.reload()
+        }
+    })
+
+    const { error, loading, data: fetchCartTotalsData } = useQuery(getPriceSummary, {
+        fetchPolicy: 'no-cache',
         skip: !cartId,
         variables: {
             cartId
@@ -82,17 +85,32 @@ export const usePriceSummary = props => {
     }, [history]);
     const flatData = flattenData(fetchCartTotalsData)
     let usedStoreCredit = false
+    console.log(fetchCartTotalsData)
     if (fetchCartTotalsData) {
         try {
             usedStoreCredit = parseInt(fetchCartTotalsData.cart.prices.mp_store_credit_discount[0].value) ? true : false
         } catch (err) {
-            //console.log(err)
+            console.log(err)
         }
     } else {
         try {
             usedStoreCredit = parseInt(cartData.details.prices.mp_store_credit_discount[0].value) ? true : false
         } catch (err) {
-            //console.log(err)
+            console.log(err)
+        }
+    }
+    console.log(usedStoreCredit)
+
+    let toSpend = 0;
+    if (
+        userStoreCreditInfo && userStoreCreditInfo.customer && userStoreCreditInfo.customer &&
+        userStoreCreditInfo.customer.mp_store_credit &&
+        userStoreCreditInfo.customer.mp_store_credit.mp_credit_balance
+    ) {
+        let newToSpend = userStoreCreditInfo.customer.mp_store_credit.mp_credit_balance.replace(/[^\w\s]/gi, '');
+        newToSpend = parseFloat(newToSpend)
+        if (newToSpend && !isNaN(newToSpend)) {
+            toSpend = newToSpend
         }
     }
 
@@ -100,12 +118,10 @@ export const usePriceSummary = props => {
         spendStoreCreditMutation({
             variables: {
                 cart_id: cartId,
-                amount: spend ? 999999 : 0
+                amount: spend ? toSpend : 0
             }
         })
     }
-
-   
 
     return {
         handleProceedToCheckout,
@@ -119,9 +135,9 @@ export const usePriceSummary = props => {
         spendStoreCreditError,
         spendStoreCreditLoading,
         usedStoreCredit,
-         spendStoreCreditData 
+        spendStoreCreditData
 
-        
+
     };
 };
 

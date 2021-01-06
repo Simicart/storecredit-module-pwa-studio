@@ -40,7 +40,7 @@ const CheckoutPage = props => {
     const talonProps = useCheckoutPage({
         ...CheckoutPageOperations
     });
-    console.log(talonProps)
+    
     const {
         /**
          * Enum, one of:

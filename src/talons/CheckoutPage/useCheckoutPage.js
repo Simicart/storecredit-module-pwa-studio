@@ -87,7 +87,13 @@ export const useCheckoutPage = props => {
     const cartItems = useMemo(() => {
         return (checkoutData && checkoutData.cart.items) || [];
     }, [checkoutData]);
-
+    
+    let is_virtual = true;
+    cartItems.map(cartItem =>{
+        if (cartItem.__typename !== 'MpStoreCreditCartItem') {
+            is_virtual = false;
+        }
+    })
     /**
      * For more info about network statues check this out
      *
@@ -213,7 +219,7 @@ export const useCheckoutPage = props => {
         handlePlaceOrder,
         hasError: !!checkoutError,
         isCartEmpty: !(checkoutData && checkoutData.cart.total_quantity),
-        is_virtual: (checkoutData && checkoutData.cart && !checkoutData.cart.is_virtual) ? false: true,
+        is_virtual,
         isGuestCheckout: !isSignedIn,
         isLoading,
         isUpdating,

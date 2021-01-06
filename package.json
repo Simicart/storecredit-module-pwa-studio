@@ -1,7 +1,7 @@
 {
   "name": "@simicart/storecredit",
-  "author": "Nguyen Dinh Duc <nguyendinhduc29041999@gmail.com>",
-  "version": "0.0.0",
+  "author": "SimiCart",
+  "version": "0.1.0",
   "main": "src/index.js",
   "pwa-studio": {
     "targets": {

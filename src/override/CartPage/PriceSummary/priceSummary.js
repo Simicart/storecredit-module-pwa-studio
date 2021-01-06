@@ -67,7 +67,8 @@ const PriceSummary = props => {
         usedStoreCredit,
         spendStoreCreditData
     } = talonProps;
-    const [toUseStoreCredit, setToUseStoreCredit] = useState(usedStoreCredit);
+    
+    
     if (hasError) {
         return (
             <div className={classes.root}>
@@ -132,19 +133,16 @@ const PriceSummary = props => {
                         field="credit_options"
                         label="Use Store Credit"
                         fieldState={{
-                            value: isOpen
+                            value: usedStoreCredit
                         }}
                         onClick={() => {
                             setOpen(!isOpen)
-                            spendStoreCredit(!toUseStoreCredit)
-                            setToUseStoreCredit(!toUseStoreCredit)
+                            spendStoreCredit(!usedStoreCredit)
 
                         }}
                         onKeyUp={() => {
                             setOpen(!isOpen)
-                            spendStoreCredit(!toUseStoreCredit)
-                            setToUseStoreCredit(!toUseStoreCredit)
-
+                            spendStoreCredit(!usedStoreCredit)
                         }}
                     />
                     <br />
