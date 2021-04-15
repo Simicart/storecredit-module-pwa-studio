@@ -1,13 +1,13 @@
 # StoreCredit module for Magento PWA Studio
 
-This module acts as an add-on for [Mageplaza's StoreCredit extension](StoreCredit) to make it work with Magento PWA Studio.
+This module acts as an add-on for [Mageplaza's Store Credit extension](https://www.mageplaza.com/magento-2-store-credit/) to make it work with Magento PWA Studio.
 
 End result: https://storecredit.pwa-commerce.com/storecredit-product-2.html
 
 ## Requirements
 
 - Magento version 2.4.* or >= 2.3.5
-- Got [Mageplaza StoreCredit extension](https://www.mageplaza.com/magento-2-store-credit/) and [StoreCredit GraphQL](https://github.com/mageplaza/magento-2-store-credit-graphql) installed
+- Got [Mageplaza Store Credit extension](https://www.mageplaza.com/magento-2-store-credit/) and [StoreCredit GraphQL](https://github.com/mageplaza/magento-2-store-credit-graphql) installed
 
 ## Installation
 
@@ -49,3 +49,7 @@ Modify the dependencies of your project to add storecredit extension.
 ```
   yarn install && yarn watch
 ```
+
+## Contribution
+
+[SimiCart Team](https://www.simicart.com/pwa.html/) & [Mageplaza Team](https://www.mageplaza.com/)
